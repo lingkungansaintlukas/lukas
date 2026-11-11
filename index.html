@@ -384,17 +384,17 @@
                             <h2 class="text-lg font-bold text-amber-300">Laporan Saldo & Rincian Iuran Kas STM</h2>
                             <p class="text-blue-300 text-sm">Filter berdasarkan pencarian KKK/Nama, Bulan, atau kustom tanggal ke tanggal.</p>
                         </div>
-                        <div class="flex flex-wrap gap-2 items-center">
-        <button id="cetakLaporanIuranCustom" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow">
-            <i class="fa fa-print mr-1"></i> Cetak Semua
-        </button>
-        <button id="cetakKasMasuk" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow">
-            <i class="fa fa-print mr-1"></i> Cetak Kas Masuk
-        </button>
-        <button id="cetakKasKeluar" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow">
-            <i class="fa fa-print mr-1"></i> Cetak Kas Keluar
-        </button>
-    </div>
+                       <div class="flex flex-wrap gap-2 items-center">
+    <button id="cetakLaporanIuranCustom" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow">
+        <i class="fa fa-print mr-1"></i> Cetak Semua
+    </button>
+    <button id="cetakKasMasuk" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow">
+        <i class="fa fa-print mr-1"></i> Cetak Kas Masuk
+    </button>
+    <button id="cetakKasKeluar" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow">
+        <i class="fa fa-print mr-1"></i> Cetak Kas Keluar
+    </button>
+</div>
 </div>
                         <button id="cetakLaporanIuranCustom" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow">
                             <i class="fa fa-print mr-1"></i> Cetak Laporan Keuangan
@@ -1551,113 +1551,111 @@ window.addEventListener('load', () => {
         }, 3000); // <-- Angka 3000 di sini mengatur durasi tahan (3 detik)
     }
 });
-    // >>> TAMBAHKAN KODE FUNGSI CETAK INI DI BAGIAN BAWAH SCRIPT <<<
-    
-    // Cetak Khusus Kas Masuk (Iuran)
-    document.getElementById('cetakKasMasuk').onclick = () => {
-        const dataMasuk = dataTransaksi.filter(t => t.tipe === 'masuk');
-        let rows = '';
-        let totalMasuk = 0;
+ // Cetak Khusus Kas Masuk (Iuran)
+document.getElementById('cetakKasMasuk').onclick = () => {
+    const dataMasuk = dataTransaksi.filter(t => t.tipe === 'masuk');
+    let rows = '';
+    let totalMasuk = 0;
 
-        dataMasuk.forEach(t => {
-            const kel = dataKeluarga.find(k => k.noKKK === t.noKKK);
-            const infoKK = kel ? `${t.noKKK} - ${kel.namaKepala} (${kel.alamat})` : t.noKKK;
-            totalMasuk += t.jumlah;
-            rows += `
-                <tr>
-                    <td>${formatTanggalIndo(t.tanggal)}</td>
-                    <td>${infoKK}</td>
-                    <td>${t.keterangan}</td>
-                    <td style="text-align: right;">Rp ${t.jumlah.toLocaleString('id-ID')}</td>
-                </tr>`;
-        });
+    dataMasuk.forEach(t => {
+        const kel = dataKeluarga.find(k => k.noKKK === t.noKKK);
+        const infoKK = kel ? `${t.noKKK} - ${kel.namaKepala} (${kel.alamat})` : t.noKKK;
+        totalMasuk += t.jumlah;
+        rows += `
+            <tr>
+                <td>${formatTanggalIndo(t.tanggal)}</td>
+                <td>${infoKK}</td>
+                <td>${t.keterangan}</td>
+                <td style="text-align: right;">Rp ${t.jumlah.toLocaleString('id-ID')}</td>
+            </tr>`;
+    });
 
-        const w = window.open('', '_blank');
-        w.document.write(`
-            <html>
-                <head>
-                    <title>Laporan Kas Masuk STM</title>
-                    <style>
-                        body { font-family: sans-serif; }
-                        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
-                        th, td { border: 1px solid #333; padding: 8px; font-size: 12px; }
-                        th { background: #e2e8f0; }
-                        .text-right { text-align: right; }
-                    </style>
-                </head>
-                <body>
-                    <h2 style="text-align: center; margin-bottom: 5px;">LAPORAN KAS MASUK (IURAN) STM LINGKUNGAN ST. LUKAS</h2>
-                    <p style="text-align: center; font-size: 13px; color: #555;">Paroki Santo Fransiskus Asisi Padang Bulan - Medan</p>
-                    <table>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>No. KKK, Nama & Alamat</th>
-                            <th>Keterangan / Periode</th>
-                            <th class="text-right">Nominal Masuk (Rp)</th>
-                        </tr>
-                        ${rows}
-                        <tr>
-                            <td colspan="3" style="text-align: right; font-weight: bold;">Total Keseluruhan Kas Masuk:</td>
-                            <td class="text-right" style="font-weight: bold;">Rp ${totalMasuk.toLocaleString('id-ID')}</td>
-                        </tr>
-                    </table>
-                </body>
-            </html>
-        `);
-        w.document.close();
-        w.print();
-    };
+    const w = window.open('', '_blank');
+    w.document.write(`
+        <html>
+            <head>
+                <title>Laporan Kas Masuk STM</title>
+                <style>
+                    body { font-family: sans-serif; }
+                    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+                    th, td { border: 1px solid #333; padding: 8px; font-size: 12px; }
+                    th { background: #e2e8f0; }
+                    .text-right { text-align: right; }
+                </style>
+            </head>
+            <body>
+                <h2 style="text-align: center; margin-bottom: 5px;">LAPORAN KAS MASUK (IURAN) STM LINGKUNGAN ST. LUKAS</h2>
+                <p style="text-align: center; font-size: 13px; color: #555;">Paroki Santo Fransiskus Asisi Padang Bulan - Medan</p>
+                <table>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>No. KKK, Nama & Alamat</th>
+                        <th>Keterangan / Periode</th>
+                        <th class="text-right">Nominal Masuk (Rp)</th>
+                    </tr>
+                    ${rows}
+                    <tr>
+                        <td colspan="3" style="text-align: right; font-weight: bold;">Total Keseluruhan Kas Masuk:</td>
+                        <td class="text-right" style="font-weight: bold;">Rp ${totalMasuk.toLocaleString('id-ID')}</td>
+                    </tr>
+                </table>
+            </body>
+        </html>
+    `);
+    w.document.close();
+    w.print();
+};
 
-    // Cetak Khusus Kas Keluar (Pengeluaran)
-    document.getElementById('cetakKasKeluar').onclick = () => {
-        const dataKeluar = dataTransaksi.filter(t => t.tipe === 'keluar');
-        let rows = '';
-        let totalKeluar = 0;
+// Cetak Khusus Kas Keluar (Pengeluaran)
+document.getElementById('cetakKasKeluar').onclick = () => {
+    const dataKeluar = dataTransaksi.filter(t => t.tipe === 'keluar');
+    let rows = '';
+    let totalKeluar = 0;
 
-        dataKeluar.forEach(t => {
-            totalKeluar += t.jumlah;
-            rows += `
-                <tr>
-                    <td>${formatTanggalIndo(t.tanggal)}</td>
-                    <td>${t.keterangan}</td>
-                    <td style="text-align: right;">Rp ${t.jumlah.toLocaleString('id-ID')}</td>
-                </tr>`;
-        });
+    dataKeluar.forEach(t => {
+        totalKeluar += t.jumlah;
+        rows += `
+            <tr>
+                <td>${formatTanggalIndo(t.tanggal)}</td>
+                <td>${t.keterangan}</td>
+                <td style="text-align: right;">Rp ${t.jumlah.toLocaleString('id-ID')}</td>
+            </tr>`;
+    });
 
-        const w = window.open('', '_blank');
-        w.document.write(`
-            <html>
-                <head>
-                    <title>Laporan Kas Keluar STM</title>
-                    <style>
-                        body { font-family: sans-serif; }
-                        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
-                        th, td { border: 1px solid #333; padding: 8px; font-size: 12px; }
-                        th { background: #fee2e2; }
-                        .text-right { text-align: right; }
-                    </style>
-                </head>
-                <body>
-                    <h2 style="text-align: center; margin-bottom: 5px;">LAPORAN KAS KELUAR (PENGELUARAN) STM LINGKUNGAN ST. LUKAS</h2>
-                    <p style="text-align: center; font-size: 13px; color: #555;">Paroki Santo Fransiskus Asisi Padang Bulan - Medan</p>
-                    <table>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Keterangan Pengeluaran</th>
-                            <th class="text-right">Nominal Keluar (Rp)</th>
-                        </tr>
-                        ${rows}
-                        <tr>
-                            <td colspan="2" style="text-align: right; font-weight: bold;">Total Keseluruhan Kas Keluar:</td>
-                            <td class="text-right" style="font-weight: bold;">Rp ${totalKeluar.toLocaleString('id-ID')}</td>
-                        </tr>
-                    </table>
-                </body>
-            </html>
-        `);
-        w.document.close();
-        w.print();
-    };
+    const w = window.open('', '_blank');
+    w.document.write(`
+        <html>
+            <head>
+                <title>Laporan Kas Keluar STM</title>
+                <style>
+                    body { font-family: sans-serif; }
+                    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+                    th, td { border: 1px solid #333; padding: 8px; font-size: 12px; }
+                    th { background: #fee2e2; }
+                    .text-right { text-align: right; }
+                </style>
+            </head>
+            <body>
+                <h2 style="text-align: center; margin-bottom: 5px;">LAPORAN KAS KELUAR (PENGELUARAN) STM LINGKUNGAN ST. LUKAS</h2>
+                <p style="text-align: center; font-size: 13px; color: #555;">Paroki Santo Fransiskus Asisi Padang Bulan - Medan</p>
+                <table>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Keterangan Pengeluaran</th>
+                        <th class="text-right">Nominal Keluar (Rp)</th>
+                    </tr>
+                    ${rows}
+                    <tr>
+                        <td colspan="2" style="text-align: right; font-weight: bold;">Total Keseluruhan Kas Keluar:</td>
+                        <td class="text-right" style="font-weight: bold;">Rp ${totalKeluar.toLocaleString('id-ID')}</td>
+                    </tr>
+                </table>
+            </body>
+        </html>
+    `);
+    w.document.close();
+    w.print();
+};
     </script>
 </body>
 </html>
